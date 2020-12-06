@@ -11,7 +11,7 @@ const Peliculas = () => {
      const Peliculas = useSelector((store) => store.peliculas.results);
     const pathImg="http://image.tmdb.org/t/p/w185/";
 
-  console.log();
+ // console.log();
 
   React.useEffect(() => {
     const InfoData = () => {

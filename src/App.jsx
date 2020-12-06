@@ -11,6 +11,8 @@ import Navbar from './components/Navbar';
 import Perfil from './components/Perfil';
 import {auth} from './components/firebase'
 import Peliculas from './components/Peliculas';
+import Genero from './components/Genero';
+import KeyWords from './components/KeyWords';
 
 
 function App() {
@@ -50,12 +52,14 @@ const RutaPrivada = ({component,path,...rest})=>{
 
   return firebaseUser!==false? (
     <Router>
-      <div className='container-fluid mt-2 ml-2 '>
+      <div className='container-fluid mt-2 ml-2' id='general'>
 
         <Navbar />
       <Switch>
         <RutaPrivada component={Peliculas} path="/" exact />
         <RutaPrivada component={Perfil} path="/perfil" exact />
+        <RutaPrivada component={Genero} path="/genero" exact />
+        <RutaPrivada component={KeyWords} path="/KeyWords" exact />
         <Route component={Login} path="/Login" exact />
       </Switch>
       </div>

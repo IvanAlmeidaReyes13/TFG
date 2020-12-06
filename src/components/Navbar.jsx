@@ -20,6 +20,8 @@ const Navbar = (props) => {
                         <>
                         <NavLink className='btn btn-dark mr-2' to='/' exact>Inicio</NavLink>
                         <NavLink className='btn btn-dark mr-2' to='/perfil' exact>Perfil</NavLink>
+                        <NavLink className='btn btn-dark mr-2' to='/genero' exact>Genero</NavLink>
+                        <NavLink className='btn btn-dark mr-2' to='/KeyWords' exact>Palabras clave</NavLink>
                         <button
                         onClick={()=>cerrarSesion()}
                         className="btn btn-danger btn-sm mr-2">Cerrar Sesión</button>

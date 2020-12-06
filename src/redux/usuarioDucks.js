@@ -34,15 +34,7 @@ switch(action.type){
 }
 
 
-
-
-
-
 //acciones
-
-
-
-
 
 
 export const ingresoUsuarioAccion = () => async(dispatch,getState)=>{
