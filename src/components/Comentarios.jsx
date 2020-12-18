@@ -1,79 +1,77 @@
 import React, { useState, useEffect } from "react";
-import { auth, firebase, db, storage } from "../components/firebase";
+import { db } from "../components/firebase";
 
 const Comentarios = (peliculaComentarios) => {
+  console.log(peliculaComentarios)
   const usuario = JSON.parse(localStorage.getItem("usuario"));
-
+  const pelicula = peliculaComentarios.peliculaComentarios;
+//los estados nos indican el historial de comentarios, si es que existe, el comentario actual y la fecha de hoy
   const [historialComentarios, setHistorialComentarios] = useState([]);
   const [tenemosHistorial, setTenemosHistorial] = useState(false);
   const [comentario, setComentario] = useState(undefined);
-  const pelicula = peliculaComentarios.peliculaComentarios;
+  const [fechaDeHoy, setFechaDeHoy] = useState(null);
 
-  /*const infoComentario = JSON.stringify({
-    displayName: usuario.displayName,
-    comentario: comentario,
-    pelicula: pelicula.titulo,
-  });*/
+  const fechaDeHoyFun = (fechaparam) => {
+    let fecha = new Date(fechaparam);
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth();
+    let anio = fecha.getFullYear();
+    let fechaFinal = dia + "/" + (mes + 1) + "/" + anio;
+    return fechaFinal;
+  };
 
+  //funcion para añadir los comentarios a la bbdd
   const comentar = async () => {
-    const historial = await db
-      .collection("comentarios")
-      .doc(pelicula.titulo)
-      .collection(usuario.displayName);
-    historial.add({
+    fechaDeHoyFun();
+
+    const historial = await db.collection("comentarios");
+    //.doc(pelicula.titulo)
+
+    const nuevoComentario = {
       comentario: comentario,
+      pelicula: pelicula.titulo,
       usuario: usuario.displayName,
-    });
+      fecha: Date.now(),
+    };
+    historial.add(nuevoComentario);
     setComentario("");
   };
-  
+//al acabar de cargar tratara de cargar los comentario para tenerlos establecidos
   useEffect(() => {
-    const traerComentario = () => {
-        try {
-            var datos = [];
-            db.collection("comentarios")
-              .doc(pelicula.titulo)
-              .collection(usuario.displayName)
-              .get()
-              .then(function (querySnapshot) {
-                querySnapshot.forEach(function (doc) {
-                  datos.push({ ...doc.data() });
-                });
-              });
-    
-            setHistorialComentarios(datos);
-            console.log(historialComentarios);
-          } catch (error) {
-            console.log(error);
-          }
-    };
-    traerComentario();
-    //setTenemosHistorial(true)
+   
+    verComentarios();
+   
   }, [pelicula]);
 
-  const verComentarios = async() => {
+  //Trae los comentarios que coinciden con la pelicula que se nos esta mostrando
+  const verComentarios = async () => {
     try {
-        var datos = [];
-        await db.collection("comentarios")
-          .doc(pelicula.titulo)
-          .collection(usuario.displayName)
-          .get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (doc) {
-              datos.push({ ...doc.data() });
-            });
-          });
-
-        setHistorialComentarios(datos);
-        console.log(historialComentarios);
-      } catch (error) {
-        console.log(error);
-      }
-    setTenemosHistorial(true);
+      
+      const info=[]
+      var datos = await db.collection("comentarios");
+      datos
+      .where("pelicula", "==", pelicula.titulo)
+      .get()
+      .then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          
+          info.push([doc.data()]);
+        });
+      })
+        .catch(function (error) {
+          console.log("Error getting documents: ", error);
+        });
+        setHistorialComentarios(info);
+        //console.log(historialComentarios);
+        
+    } catch (error) {
+      console.log(error);
+    }
   };
 
+  console.log(historialComentarios)
   return (
-    <div className="container">
+    <div className="container mb-5">
       <div className="container">
         <textarea
           value={comentario}
@@ -96,20 +94,23 @@ const Comentarios = (peliculaComentarios) => {
 
         <button
           onClick={() => {
-            verComentarios();
-          }}
+            verComentarios()},()=>{setTenemosHistorial(true)}
+          }
           className="btn-dark btn-block mt-3"
         >
-          Ver comentarios
+            Ver comentarios
+            
         </button>
       </div>
 
-      {tenemosHistorial &&
+      {tenemosHistorial===true&&
         historialComentarios.map((item) => (
-          <div className="text-center" key={item.comentario}>
+          <div className="text-center" key={item[0].comentario}>
             <div className="card text-center mt-4">
               <div className="card-body">
-                <div className="card-text">{item.comentario} </div>
+                <strong className="float-left mr-2">{item[0].usuario}: </strong>
+                <div className="float-left"> {item[0].comentario} </div>
+                <span className="float-right">{fechaDeHoyFun(item[0].fecha)}</span>
               </div>
             </div>
           </div>

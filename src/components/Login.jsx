@@ -1,8 +1,8 @@
 import React from 'react'
 import {useDispatch,useSelector} from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import { ingresoUsuarioAccion } from '../redux/usuarioDucks'
-
+import { ingresoUsuarioAccion,ingresoUsuarioFacebookAccion } from '../redux/usuarioDucks'
+import FacebookLogin from 'react-facebook-login';
 const Login = (props) => {
 
 
@@ -14,14 +14,31 @@ const Login = (props) => {
             props.history.push('/')
         }
     }, [activo,props.history])
+
+    const respuestaFacebook = (respuesta) => {
+        dispatch(ingresoUsuarioFacebookAccion(respuesta))
+      }
+
     return (
         <div className='mt-5 text-center'>
-            <h3>Ingreso con Goggle</h3>
-            <hr />
+            <h3>Ingreso con Google</h3>
+            
             <button className="btn btn-dark"
             onClick={()=>dispatch(ingresoUsuarioAccion())}
             disabled={loading}
-            >Acceder</button>
+           
+            >Acceder con <span style={{color:'#4285F4'}}>G</span><span style={{color:'#DB4437'}}>o</span><span style={{color:'#F4B400'}}>o</span><span style={{color:'#4285F4'}}>g</span><span style={{color:'#0F9D58'}}>l</span><span style={{color:'#DB4437'}}>e</span></button>
+        
+            <hr/>
+        <br></br>
+        <h3>Ingreso con Facebook</h3>
+        <FacebookLogin
+        appId="656623428352054"
+        autoLoad={false}
+        fields="name,email,picture" 
+        callback={respuestaFacebook} 
+        textButton='Acceder con Facebook'
+        cssClass='iconoFacebook' />
         </div>
     )
 }

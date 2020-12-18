@@ -35,7 +35,50 @@ switch(action.type){
 
 
 //acciones
+export const ingresoUsuarioFacebookAccion = (respuesta) => async(dispatch,getState)=>{
+    dispatch({
+        type:LOADING
+    })
+    try {
 
+        const provider=new firebase.auth.FacebookAuthProvider();
+        const res= await auth.signInWithPopup(provider)
+        
+        const usuario={
+            uid:res.user.uid,
+            email:res.user.email,
+            displayName:res.user.displayName,
+            photoURL:res.user.photoURL
+        }
+        const usuarioDB=await db.collection('usuarios').doc(usuario.email).get()
+
+
+        if(usuarioDB.exists){
+            
+            dispatch({
+                type:USUARIO_EXITO,
+                payload:usuarioDB.data()
+            })
+            localStorage.setItem('usuario',JSON.stringify(usuarioDB.data()))
+        }else{
+            await db.collection('usuarios').doc(usuario.email).set(usuario)
+            dispatch({
+                type:USUARIO_EXITO,
+                payload:usuario
+    
+
+            })
+            localStorage.setItem('usuario',JSON.stringify(usuario))
+        }
+
+    } catch (error) {
+        console.log(error)
+        dispatch({
+        type:USUARIO_ERROR
+
+        })
+    }
+}
 
 export const ingresoUsuarioAccion = () => async(dispatch,getState)=>{
     dispatch({
@@ -69,8 +112,6 @@ export const ingresoUsuarioAccion = () => async(dispatch,getState)=>{
             dispatch({
                 type:USUARIO_EXITO,
                 payload:usuario
-    
-
             })
             localStorage.setItem('usuario',JSON.stringify(usuario))
         }

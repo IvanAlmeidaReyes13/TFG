@@ -1,4 +1,4 @@
-import{auth,firebase,db,storage} from '../components/firebase'
+
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -10,6 +10,7 @@ const KeyWords = () => {
     const peliculaEscogida=useSelector((store) => store.peliculas.pelicula);
     const keyWordsIds=useSelector((store)=>store.peliculas.keyWords)
     const pathImg="http://image.tmdb.org/t/p/w185/";
+    const pathTrailer="https://www.youtube.com/embed/";
 
     React.useEffect(() => {
         const InfoData = () => {
@@ -18,7 +19,7 @@ const KeyWords = () => {
             dispatch(obtenerKeyWordsAccion());
         };
         InfoData();
-    }, [dispatch]);
+    }, [dispatch,keyWord]);
     const generarKeyWord=(e)=>{
         setKeyWord(e.target.value)
     }
@@ -48,19 +49,47 @@ const KeyWords = () => {
         >
             Buscar
         </button>
-           {peliculaEscogida&&(
-          <div className='text-center'><h3>{peliculaEscogida.titulo}</h3>
-            <div className='card text-center mt-4'>
-            <div className="card-body">
-                <img src={pathImg+peliculaEscogida.foto} className='img-fluid'/>
-                <div className="card-text">Descripcion: {peliculaEscogida.descripcion} </div>
+        {peliculaEscogida && (
+        <div className="text-center">
+        <h3>{peliculaEscogida.titulo}</h3>
+        <div className="card text-center mt-4">
+          <div className="card-body">
+            <div className="row mx-auto">
+              <div className="col mx-auto">
+                <img
+                  src={pathImg + peliculaEscogida.foto}
+                  className="img-fluid"
+                />
+                <br />
+
+              </div>
+              </div>
+              <div className="row mx-auto">
+              <div className="col-md-6 mx-auto">
+                <div className="card-text">
+                  <strong>Descripcion:</strong> {peliculaEscogida.descripcion}<br />
+                  <strong>Generos:</strong> 
+                  {
+                    peliculaEscogida.genero.map((item) => (
+                      item!==undefined&& <span key={item}>{item}<br /></span> 
+                      ))
+                    }
+                  <strong>Puntuación media:</strong> {peliculaEscogida.puntuacion}/10<br />
+
+                </div>
+              </div>
             </div>
-            
-            </div>
+              <div className='row '>
+
+                <div className='col mx-auto'>
+                    <iframe className='mt-5' width='1000' height='500'   src={pathTrailer+peliculaEscogida.trailer} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
+</div>
+
+                </div>
+          </div>
         </div>
-       
-  )
-}
+      </div>
+      )}
 {peliculaEscogida&&(
         <Comentarios peliculaComentarios={peliculaEscogida}/>)}
         </div>
