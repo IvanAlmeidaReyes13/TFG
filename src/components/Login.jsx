@@ -33,7 +33,7 @@ const Login = (props) => {
         <br></br>
         <h3>Ingreso con Facebook</h3>
         <FacebookLogin
-        appId="656623428352054"
+        appId=""
         autoLoad={false}
         fields="name,email,picture" 
         callback={respuestaFacebook} 
