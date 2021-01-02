@@ -5,13 +5,13 @@ import 'firebase/storage'
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDc4qkWCb_73_VqUdJU7iLsH0mpXeUovGc",
-  authDomain: "tfg-ivan-almeida.firebaseapp.com",
-  databaseURL: "https://tfg-ivan-almeida.firebaseio.com",
+  apiKey: "API_KEY",
+  authDomain: **",
+  databaseURL: "**",
   projectId: "tfg-ivan-almeida",
-  storageBucket: "tfg-ivan-almeida.appspot.com",
-  messagingSenderId: "1096393223498",
-  appId: "1:1096393223498:web:9ac8600684a6400b7fa5b3"
+  storageBucket: "**",
+  messagingSenderId: "**",
+  appId: ""
 };
   // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
